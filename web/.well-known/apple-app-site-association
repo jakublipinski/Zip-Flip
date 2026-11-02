@@ -1,0 +1,16 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": [
+          "7S8YWB34KS.app.zip-flip.ZipFlip.watchkitapp",
+          "7S8YWB34KS.app.zip-flip.ZipFlip"
+        ],
+        "components": [
+          { "/": "/s", "?": { "id": "?*" }, "comment": "Zip Flip link without the trailing slash" },
+          { "/": "/s/", "?": { "id": "?*" }, "comment": "Zip Flip link, canonical form" }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Support — Zip Flip</title>
+<meta name="description" content="Help with Zip Flip: making the link, sheets the watch cannot read, how the schedule works, reporting a bug.">
+<link rel="canonical" href="https://zip-flip.app/support.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="fonts/newsreader.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+  <header class="wrap header">
+    <a href="/" class="brand" aria-label="Zip Flip home">
+      <svg width="24" height="24" viewBox="0 0 100 100" aria-hidden="true"><rect x="24" y="36" width="52" height="38" rx="7" fill="#6EB6CF"/><g transform="rotate(-14 50 46)"><rect x="24" y="27" width="52" height="38" rx="7" fill="#6EB6CF" stroke="#000" stroke-width="4"/></g></svg>
+      <span>ZIP FLIP</span>
+    </a>
+    <a href="/" class="quiet" style="font-size:14px">Home</a>
+  </header>
+
+  <main class="prose">
+    <h1>Support</h1>
+    <p class="lede">The fastest way to report a bug or ask for help is <a href="https://github.com/jakublipinski/Zip-Flip/issues">GitHub Issues</a>. Everything is handled in the open.</p>
+
+    <h2 id="sheet">How should the sheet look?</h2>
+    <p>One tab per deck. Column A is the front of each card, column B is the back. Everything else is ignored: other columns, empty rows, and a first row that just says front and back. Hidden tabs are skipped. The deck is named after the tab.</p>
+
+    <h2 id="link">How do I get the sheet onto the watch?</h2>
+    <ol>
+      <li>In Google Sheets, choose Share, then Anyone with the link, as a viewer.</li>
+      <li>Paste the sheet's address into the <a href="/#make">link maker</a>. It gives you a Zip Flip link.</li>
+      <li>Send that link to the watch in Messages and tap it there. Zip Flip opens and each tab appears as a deck.</li>
+    </ol>
+    <p>A new link replaces the previous spreadsheet. Progress for the old one stays on the watch in case you come back to it.</p>
+
+    <h2 id="cannot-read">The watch says it cannot read the sheet</h2>
+    <p>Almost always the sheet is not shared as Anyone with the link. Open the sheet's Share dialog and check. Then tap Try again on the watch. Until it works, the watch keeps showing the cards it saved last time.</p>
+
+    <h2 id="iphone">Do I need an iPhone?</h2>
+    <p>No. Zip Flip runs entirely on the watch and installs from the App Store on the watch. It works on a watch set up for a child through Apple Watch For Your Kids, which has no iPhone of its own.</p>
+
+    <h2 id="offline">Does it work offline?</h2>
+    <p>Yes. The cards and your progress live on the watch. The watch only needs a connection when you add a sheet or when it refreshes the cards, and it refreshes whenever it can.</p>
+
+    <h2 id="schedule">How does the schedule work?</h2>
+    <p>Each card sits on a ladder. Got it moves it up one step and the card comes back after one, two, four, eight, sixteen, thirty-two, sixty-four and then one hundred twenty-eight days. Again puts it back on the first step and shows it again in the same session. A session shows cards that are due first, then a few new ones, twenty at a time.</p>
+    <p>Practice shows a deck in random order and changes nothing, so you can quiz yourself before a test without disturbing the schedule.</p>
+
+    <h2 id="sound">Does it make a sound?</h2>
+    <p>No. Zip Flip uses only the silent tap of the watch.</p>
+
+    <h2 id="else">Anything else</h2>
+    <p><a href="https://github.com/jakublipinski/Zip-Flip/issues">Open an issue on GitHub</a> and it will be read.</p>
+  </main>
+
+  <footer class="wrap footer" style="padding:0 clamp(20px,5vw,48px) 40px">
+    Zip Flip · <a href="/">home</a> · <a href="privacy.html">privacy</a>
+  </footer>
+</div>
+<script data-goatcounter="https://zip-flip.goatcounter.com/count"
+        async src="/count.js"></script>
+</body>
+</html>

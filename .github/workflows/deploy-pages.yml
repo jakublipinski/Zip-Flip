@@ -1,0 +1,49 @@
+# Deploy the static site in web/ to GitHub Pages.
+#
+# Deploying from a workflow rather than a branch keeps the published site
+# decoupled from the repository layout: the app source lives at the root, only
+# web/ is ever published, and there is no gh-pages branch to keep in sync.
+# web/.nojekyll keeps the .well-known folder (Apple App Site Association) from
+# being dropped, and web/CNAME carries the custom domain.
+name: Deploy website to Pages
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "web/**"
+      - ".github/workflows/deploy-pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time; never cancel a run that is already publishing.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Setup Pages
+        # enablement: creates the Pages site on first run, so the repo does not
+        # have to be configured by hand before the first deploy.
+        uses: actions/configure-pages@v6
+        with:
+          enablement: true
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: "web"
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
