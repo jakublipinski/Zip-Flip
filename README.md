@@ -72,7 +72,7 @@ Each entry records what was decided, why, and what follows from it. Dates are wh
 
 **Why.** Tabs are how people already organise a spreadsheet by subject, so a family's sheet with tabs for Spanish, capitals and times tables needs no reformatting. Renaming a tab renames the deck. A tab's internal id (`gid`) never changes, so renaming keeps the progress. Hiding a tab is a natural way for the owner to park a deck without deleting it. There is no hint column because a hint is a third thing to author, a card that needs one is usually better split into two cards, and a 40 mm screen has no room for it anyway.
 
-**Consequences.** The CSV endpoint can download a tab but cannot list tabs. The app therefore reads the spreadsheet's HTML view (`/htmlview`), which embeds one script entry per visible tab with its name and `gid`, then downloads each tab as CSV. This is the one piece of fragile parsing in the app. It is kept in one small, isolated parser, and if it fails the app falls back to the first tab as a single deck. Verified on 2026-11-01 against a public single-tab sheet; the multi-tab and hidden-tab behaviour is still to be confirmed with our own sheet.
+**Consequences.** The CSV endpoint can download a tab but cannot list tabs. The app therefore reads the spreadsheet's HTML view (`/htmlview`), which embeds one script entry per visible tab with its name and `gid`, then downloads each tab as CSV. This is the one piece of fragile parsing in the app. It is kept in one small, isolated parser, and if it fails the app falls back to the first tab as a single deck. Verified on 2026-11-01 against a public single-tab sheet and on 2026-11-02 against the project's own test sheet with five tabs: the HTML view lists the four visible tabs in display order, an empty tab included, and omits the hidden one, while the CSV export still serves a hidden tab's `gid` on request. The tab list therefore comes from the HTML view only; the app never guesses `gid` values. The export itself is UTF-8 with CRLF record separators, quotes fields that contain commas or line breaks (the line break inside a quoted field is a bare LF), writes an empty row as `,,`, leaves numbers unformatted, and answers an empty tab with an empty body and status 200.
 
 ### 6. Offline first (2026-11)
 
@@ -161,7 +161,7 @@ Names that described the data source or the device were rejected, partly because
 
 ### 16. The website is static and hosted on GitHub Pages (2026-11-01)
 
-**Decision.** Everything under zip-flip.app is static HTML in the `web/` folder of this repository, deployed to GitHub Pages by a workflow on every push that touches it, with the custom domain set through a `CNAME` file and HTTPS enforced. The site carries the landing page, the privacy and support pages the App Store requires, and the Apple App Site Association file at `/.well-known/apple-app-site-association` that makes Universal Links work. A `.nojekyll` file keeps the dot-folder from being dropped.
+**Decision.** Everything under zip-flip.app is static HTML in the `web/` folder of this repository, deployed to GitHub Pages by a workflow on every push that touches it, with the custom domain set through a `CNAME` file and HTTPS enforced. The site carries the landing page, the privacy and support pages the App Store requires, and the Apple App Site Association file at `/.well-known/apple-app-site-association` that makes Universal Links work. The upload action excludes dot-prefixed paths by default, so the workflow sets `include-hidden-files: true`; without it the first deploy published everything except `.well-known` (2026-11-02).
 
 **Why.** The site has no dynamic content, and Pages is free, versioned with the code, and already proven with the same layout in another watch app of ours. The `.app` top-level domain requires HTTPS, which Pages provides for custom domains.
 
@@ -198,7 +198,7 @@ Matching happens on the tapped URL before any request reaches the site, so an in
 ## Open questions
 
 - Verify that TestFlight is a workable path to a Family Setup watch. Direct installs are out: on 2026-11-01 `xcrun devicectl list devices` on a Mac next to such a watch listed only the developer's own paired watch and iPhone.
-- Confirm with our own sheet that the HTML view lists every visible tab and omits hidden ones, and how it behaves for a spreadsheet with many tabs.
+- Confirm how the HTML view behaves for a spreadsheet with dozens of tabs. Five tabs, one hidden and one empty, are confirmed (decision 5).
 - Background refresh cadence, and whether watchOS background tasks are worth the complexity for v1.
 - Whether a pairing-code service is ever needed, or whether links are enough.
 - How a Family Setup watch presents the landing page when a link is tapped before the app is installed, and whether an App Store link on that page opens the watch App Store.

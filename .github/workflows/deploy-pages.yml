@@ -3,8 +3,8 @@
 # Deploying from a workflow rather than a branch keeps the published site
 # decoupled from the repository layout: the app source lives at the root, only
 # web/ is ever published, and there is no gh-pages branch to keep in sync.
-# web/.nojekyll keeps the .well-known folder (Apple App Site Association) from
-# being dropped, and web/CNAME carries the custom domain.
+# include-hidden-files keeps the .well-known folder (Apple App Site Association)
+# in the artifact, and web/CNAME carries the custom domain.
 name: Deploy website to Pages
 
 on:
@@ -44,6 +44,9 @@ jobs:
         uses: actions/upload-pages-artifact@v5
         with:
           path: "web"
+          # Since v5 the action drops dot-prefixed paths unless told otherwise,
+          # which silently removes .well-known (found on the first deploy, 2026-11-02).
+          include-hidden-files: true
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
