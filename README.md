@@ -176,7 +176,7 @@ The association file matches path and query together, with and without the trail
 ]
 ```
 
-Matching happens on the tapped URL before any request reaches the site, so an installed app never loads the page. If the app is not installed, Messages on the watch shows the page in its reduced web view, so the page must be small and must say how to install the app (to verify on a real watch). Apple requires the association file over HTTPS with a valid certificate and no redirects, so the apex domain must serve it directly. One thing left to verify after the first deploy: that Apple's CDN accepted the file as Pages serves it (an extensionless file with a generic content type), checked with `https://app-site-association.cdn-apple.com/a/v1/zip-flip.app`. If it did not, the domain gets a proxy in front that sets the type, or the site moves host.
+Matching happens on the tapped URL before any request reaches the site, so an installed app never loads the page. If the app is not installed, Messages on the watch shows the page in its reduced web view, so the page must be small and must say how to install the app (to verify on a real watch). Apple requires the association file over HTTPS with a valid certificate and no redirects, so the apex domain must serve it directly. Verified 2026-11-02 after the first deploy: Pages serves the file with status 200, no redirect and the generic `application/octet-stream` type, and Apple's CDN accepted it as is, returning the same content at `https://app-site-association.cdn-apple.com/a/v1/zip-flip.app`.
 
 ### 17. Zip Flip looks like a sibling of Silent Bell (2026-11-01)
 
