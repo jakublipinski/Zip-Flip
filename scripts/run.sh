@@ -50,4 +50,13 @@ for attempt in 1 2 3 4 5; do
   sleep 10
 done
 echo "install failed, see $LOG" >&2
+if grep -q "rejected the Bluetooth connection attempt" "$LOG"; then
+  cat >&2 <<'HINT'
+The watch refused the connection, so its pairing with this Mac is stale
+(a watchOS upgrade requires pairing again). In Xcode open Device Hub,
+click +, choose Pair Nearby Device and pick Apple Watch; leave the sheet
+open. On the watch: Settings > Privacy & Security > Developer Mode, scroll
+to the bottom, tap this Mac, tap Pair, enter the PIN Device Hub shows.
+HINT
+fi
 exit 1
