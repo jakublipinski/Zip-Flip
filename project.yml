@@ -20,6 +20,12 @@ settings:
     SWIFT_VERSION: "5"
     SWIFT_STRICT_CONCURRENCY: minimal
 
+# Local Swift package with all logic that touches neither SwiftUI nor the
+# network; `swift test` in ZipFlipCore/ runs its tests on the Mac.
+packages:
+  ZipFlipCore:
+    path: ZipFlipCore
+
 schemes:
   # Archive this one for the App Store (scripts/release.sh).
   ZipFlip:
@@ -76,6 +82,8 @@ targets:
         WKApplication: true
         WKWatchOnly: true
         ITSAppUsesNonExemptEncryption: false
+    dependencies:
+      - package: ZipFlipCore
     entitlements:
       path: ZipFlip/ZipFlip.entitlements
       properties:

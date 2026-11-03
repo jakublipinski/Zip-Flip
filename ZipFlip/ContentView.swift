@@ -1,4 +1,5 @@
 import SwiftUI
+import ZipFlipCore
 
 /// Placeholder for step 2 of the plan: proves the app builds, signs,
 /// installs and reads its own version. Replaced by the real screens in step 5.
@@ -17,6 +18,9 @@ struct ContentView: View {
             Text("Zip Flip")
                 .font(.title2.weight(.semibold))
             Text(version)
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            Text("Make a link at \(Links.host)")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
         }
