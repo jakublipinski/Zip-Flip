@@ -42,7 +42,7 @@ Each entry records what was decided, why, and what follows from it. Dates are wh
 - No API key. The alternative, Sheets API v4 with an API key, would put a key into an open-source repository. The CSV endpoint needs none.
 - Not "Publish to web". Publishing creates a long opaque token, republishes on a delay, and is a second thing for the sheet owner to remember. Link sharing uses the normal 44-character spreadsheet ID that is already in the sheet's URL, and edits show up on the next refresh.
 
-**Consequences.** Private sheets are not supported, by design. The owner must set link sharing. The app never sees a Google account. Google could change the export endpoint, so the parser is kept small and isolated.
+**Consequences.** Private sheets are not supported, by design. The owner must set link sharing. The app never sees a Google account. Google could change the export endpoint, so the parser is kept small and isolated. Observed 2026-11-03: the export answers with a 307 redirect to a `googleusercontent.com` download host and the CSV comes from there, so the client follows redirects and judges the final answer by its status and `text/csv` content type, not by its host; an unknown id answers 404; a deleted tab's `gid` answers 400; the export's `Content-Disposition` header carries `<spreadsheet title> - <tab name>.csv`, which is where the app learns the title and notices renamed tabs.
 
 ### 3. The sheet reaches the watch through a Universal Link (2026-10, link form revised 2026-11-01)
 

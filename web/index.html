@@ -170,7 +170,7 @@
   var send = document.getElementById('link-send');
   function update() {
     var v = input.value.trim();
-    var m = v.match(/\/spreadsheets\/d\/([A-Za-z0-9_-]{20,})/) || v.match(/^([A-Za-z0-9_-]{25,})$/);
+    var m = v.match(/\/spreadsheets\/(?:u\/\d+\/)?d\/([A-Za-z0-9_-]{20,})/) || v.match(/^([A-Za-z0-9_-]{25,})$/);
     var id = m ? m[1] : '';
     var link = id ? 'https://zip-flip.app/s/?id=' + id : '';
     out.hidden = !id;

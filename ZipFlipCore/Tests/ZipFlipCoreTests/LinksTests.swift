@@ -8,6 +8,7 @@ final class LinksTests: XCTestCase {
         XCTAssertEqual(Links.spreadsheetID(fromPastedText: "https://docs.google.com/spreadsheets/d/\(id)/edit?usp=sharing"), id)
         XCTAssertEqual(Links.spreadsheetID(fromPastedText: " https://docs.google.com/spreadsheets/d/\(id)/edit#gid=0\n"), id)
         XCTAssertEqual(Links.spreadsheetID(fromPastedText: id), id, "a bare id is accepted")
+        XCTAssertEqual(Links.spreadsheetID(fromPastedText: "https://docs.google.com/spreadsheets/u/1/d/\(id)/edit"), id, "the multi-account address form")
         XCTAssertNil(Links.spreadsheetID(fromPastedText: "https://docs.google.com/document/d/\(id)/edit"))
         XCTAssertNil(Links.spreadsheetID(fromPastedText: "short"))
         XCTAssertNil(Links.spreadsheetID(fromPastedText: ""))
@@ -43,5 +44,14 @@ final class LinksTests: XCTestCase {
         XCTAssertEqual(Links.tabName(fromContentDisposition: #"attachment; filename="Title - Tab.csv""#), "Tab")
         XCTAssertNil(Links.tabName(fromContentDisposition: #"attachment; filename="data.csv""#))
         XCTAssertNil(Links.tabName(fromContentDisposition: "inline"))
+    }
+}
+
+final class ContentDispositionTests: XCTestCase {
+    func testSpreadsheetTitle() {
+        let google = #"attachment; filename="Zip-Fliptest-Spanish.csv"; filename*=UTF-8''Zip-Flip%20test%20-%20Spanish.csv"#
+        XCTAssertEqual(Links.spreadsheetTitle(fromContentDisposition: google), "Zip-Flip test")
+        XCTAssertEqual(Links.spreadsheetTitle(fromContentDisposition: #"attachment; filename="A - B - C.csv""#), "A - B")
+        XCTAssertNil(Links.spreadsheetTitle(fromContentDisposition: #"attachment; filename="data.csv""#))
     }
 }

@@ -29,7 +29,7 @@ public struct Deck: Equatable, Sendable {
 }
 
 /// A tab as listed by the spreadsheet's HTML view.
-public struct Tab: Hashable, Sendable {
+public struct Tab: Hashable, Codable, Sendable {
     public let name: String
     public let gid: String
 

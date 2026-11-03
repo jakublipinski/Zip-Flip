@@ -6,7 +6,8 @@ public enum Links {
     public static let host = "zip-flip.app"
 
     private static let idShape = try! Regex(#"^[A-Za-z0-9_-]{20,}$"#)
-    private static let idInSheetsURL = try! Regex(#"/spreadsheets/d/([A-Za-z0-9_-]{20,})"#)
+    /// Also matches the `/spreadsheets/u/1/d/` form that appears when the browser is signed into several Google accounts.
+    private static let idInSheetsURL = try! Regex(#"/spreadsheets/(?:u/\d+/)?d/([A-Za-z0-9_-]{20,})"#)
     private static let bareID = try! Regex(#"^[A-Za-z0-9_-]{25,}$"#)
 
     public static func isSpreadsheetID(_ s: String) -> Bool {
@@ -60,25 +61,38 @@ public enum Links {
     /// The tab name Google puts in the export's Content-Disposition header,
     /// `attachment; filename="<title> - <tab>.csv"`, or nil.
     public static func tabName(fromContentDisposition header: String) -> String? {
-        if let m = header.firstMatch(of: utf8FileName), let encoded = m.output[1].substring,
-           let decoded = String(encoded).removingPercentEncoding, let name = tabPart(of: decoded) {
-            return name
-        }
-        if let m = header.firstMatch(of: plainFileName), let plain = m.output[1].substring,
-           let name = tabPart(of: String(plain)) {
-            return name
-        }
-        return nil
+        exportFileName(fromContentDisposition: header).flatMap { split($0)?.tab }
+    }
+
+    /// The spreadsheet title from the same header, or nil.
+    public static func spreadsheetTitle(fromContentDisposition header: String) -> String? {
+        exportFileName(fromContentDisposition: header).flatMap { split($0)?.title }
     }
 
     private static let utf8FileName = try! Regex(#"filename\*=UTF-8''([^;]+)"#)
     private static let plainFileName = try! Regex(#"filename="([^"]*)""#)
 
-    private static func tabPart(of fileName: String) -> String? {
+    /// The UTF-8 form of the file name when present (it keeps spaces and
+    /// non-ASCII letters), otherwise the plain one.
+    static func exportFileName(fromContentDisposition header: String) -> String? {
+        if let m = header.firstMatch(of: utf8FileName), let encoded = m.output[1].substring,
+           let decoded = String(encoded).removingPercentEncoding {
+            return decoded
+        }
+        if let m = header.firstMatch(of: plainFileName), let plain = m.output[1].substring {
+            return String(plain)
+        }
+        return nil
+    }
+
+    /// "<title> - <tab>.csv" split at the last " - ".
+    private static func split(_ fileName: String) -> (title: String, tab: String)? {
         guard fileName.hasSuffix(".csv") else { return nil }
         let stem = fileName.dropLast(4)
         guard let range = stem.range(of: " - ", options: .backwards) else { return nil }
-        let tab = stem[range.upperBound...]
-        return tab.isEmpty ? nil : String(tab)
+        let title = String(stem[..<range.lowerBound])
+        let tab = String(stem[range.upperBound...])
+        guard !tab.isEmpty else { return nil }
+        return (title, tab)
     }
 }

@@ -11,6 +11,8 @@ let package = Package(
     ],
     targets: [
         .target(name: "ZipFlipCore"),
+        // Command-line harness: `swift run zipflip-fetch <sheet id or address>`.
+        .executableTarget(name: "zipflip-fetch", dependencies: ["ZipFlipCore"]),
         .testTarget(
             name: "ZipFlipCoreTests",
             dependencies: ["ZipFlipCore"],
