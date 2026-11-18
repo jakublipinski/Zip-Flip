@@ -18,6 +18,14 @@ final class DayTests: XCTestCase {
         XCTAssertEqual(Day("2026-11-02")!.days(until: Day("2026-11-01")!), -1)
     }
 
+    func testStartOfDay() {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(identifier: "Europe/Warsaw")!
+        let start = Day("2026-11-02")!.start(in: cal)
+        XCTAssertEqual(cal.dateComponents([.year, .month, .day, .hour], from: start).hour, 0)
+        XCTAssertEqual(Day(start, calendar: cal), Day("2026-11-02"))
+    }
+
     func testOrdering() {
         XCTAssertLessThan(Day("2026-11-02")!, Day("2026-11-03")!)
         XCTAssertLessThan(Day("2025-12-31")!, Day("2026-01-01")!)

@@ -82,6 +82,25 @@ final class SessionPlannerTests: XCTestCase {
         XCTAssertEqual(plan.nextDue, today.adding(days: 2))
     }
 
+    func testSummaryMatchesThePlan() {
+        let deck = makeDeck(30)
+        var p = DeckProgress(gid: "1")
+        p[deck.cards[0]] = progress(due: today)
+        p[deck.cards[1]] = progress(due: today.adding(days: -5))
+        p[deck.cards[3]] = progress(due: today.adding(days: 3))
+        p[deck.cards[4]] = progress(due: today.adding(days: 1), introduced: today)
+        let s = SessionPlanner.summary(deck: deck, progress: p, today: today)
+        XCTAssertEqual(s, DeckSummary(dueCount: 2, newCount: 4, unseenCount: 26, totalCount: 30, nextDue: today.adding(days: 1)))
+        XCTAssertFalse(s.isDone)
+        var rng = SeededRNG(seed: 1)
+        let plan = SessionPlanner.plan(deck: deck, progress: p, today: today, using: &rng)
+        XCTAssertEqual(plan.dueCount, s.dueCount)
+        XCTAssertEqual(plan.newCount, s.newCount)
+        XCTAssertEqual(plan.unseenCount, s.unseenCount)
+        XCTAssertEqual(plan.nextDue, s.nextDue)
+        XCTAssertTrue(SessionPlanner.summary(deck: makeDeck(0), progress: DeckProgress(gid: "1"), today: today).isDone)
+    }
+
     func testPracticeIsAShuffledSlice() {
         let deck = makeDeck(25)
         var rng = SeededRNG(seed: 3)

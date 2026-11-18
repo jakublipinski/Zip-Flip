@@ -38,6 +38,11 @@ public struct Day: Hashable, Comparable, Sendable, CustomStringConvertible {
         String(format: "%04d-%02d-%02d", year, month, day)
     }
 
+    /// Midnight at the start of this day in `calendar`, for formatting on screen.
+    public func start(in calendar: Calendar = .current) -> Date {
+        calendar.date(from: DateComponents(year: year, month: month, day: day)) ?? Date()
+    }
+
     public func adding(days: Int) -> Day {
         let moved = Day.calendar.date(byAdding: .day, value: days, to: noon)!
         return Day(moved, calendar: Day.calendar)

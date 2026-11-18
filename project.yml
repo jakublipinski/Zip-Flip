@@ -97,3 +97,6 @@ targets:
         GENERATE_INFOPLIST_FILE: NO
         TARGETED_DEVICE_FAMILY: "4"
         SKIP_INSTALL: YES
+        # Strings go to Localizable.xcstrings at build time (English first, Polish later).
+        SWIFT_EMIT_LOC_STRINGS: YES
+        LOCALIZATION_PREFERS_STRING_CATALOGS: YES

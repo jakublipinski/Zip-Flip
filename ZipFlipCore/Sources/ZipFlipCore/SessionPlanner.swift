@@ -17,6 +17,19 @@ public struct SessionPlan: Equatable, Sendable {
     public var remainingCount: Int { dueCount + newCount - cards.count }
 }
 
+/// The numbers the deck list and the deck screen show.
+public struct DeckSummary: Equatable, Sendable {
+    public let dueCount: Int
+    /// New cards still allowed today.
+    public let newCount: Int
+    public let unseenCount: Int
+    public let totalCount: Int
+    public let nextDue: Day?
+
+    /// Nothing to study today.
+    public var isDone: Bool { dueCount == 0 && newCount == 0 }
+}
+
 /// Builds the queue for a deck (README decision 13): every card due today or
 /// earlier, sorted by due date with ties shuffled, then new cards in sheet
 /// order, at most `newCardsPerDay` new cards per deck per day, at most
@@ -24,6 +37,24 @@ public struct SessionPlan: Equatable, Sendable {
 public enum SessionPlanner {
     public static let newCardsPerDay = 5
     public static let sessionSize = 20
+
+    /// The counts without building a queue.
+    public static func summary(deck: Deck, progress: DeckProgress, today: Day) -> DeckSummary {
+        var due = 0, unseen = 0
+        var nextDue: Day? = nil
+        for card in deck.cards {
+            if let p = progress[card] {
+                if p.due <= today { due += 1 }
+                else if nextDue.map({ p.due < $0 }) ?? true { nextDue = p.due }
+            } else {
+                unseen += 1
+            }
+        }
+        let introducedToday = progress.cards.values.filter { $0.introduced == today }.count
+        let allowance = max(0, newCardsPerDay - introducedToday)
+        return DeckSummary(dueCount: due, newCount: min(unseen, allowance), unseenCount: unseen,
+                           totalCount: deck.cards.count, nextDue: nextDue)
+    }
 
     public static func plan(
         deck: Deck,
