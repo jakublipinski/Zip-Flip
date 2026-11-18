@@ -110,6 +110,7 @@ struct FirstRunView: View {
                     library.use(spreadsheetID: "1gqG1A6OSHIcWcxnPhfF7ouWymoo5u67F6eJLOPTXHSI")
                 }
                 .padding(.top, 6)
+                DebugLinkLine()
                 #endif
             }
             .multilineTextAlignment(.center)

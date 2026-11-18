@@ -61,4 +61,31 @@ struct DebugScreenView: View {
         }
     }
 }
+
+/// Debug builds only: the last link the app was handed and by which entry
+/// point, kept across launches, so a tap in Messages can be diagnosed on the
+/// watch itself. Shown on the first-run screen and in About.
+@Observable
+@MainActor
+final class DebugLinkLog {
+    static let shared = DebugLinkLog()
+    private static let key = "zfLastLink"
+
+    private(set) var last: String? = UserDefaults.standard.string(forKey: DebugLinkLog.key)
+
+    func record(_ text: String) {
+        let stamp = Date().formatted(date: .omitted, time: .standard)
+        last = "\(stamp) \(text)"
+        UserDefaults.standard.set(last, forKey: DebugLinkLog.key)
+    }
+}
+
+struct DebugLinkLine: View {
+    var body: some View {
+        Text(verbatim: "Last link: \(DebugLinkLog.shared.last ?? "none received")")
+            .font(.system(size: 10))
+            .foregroundStyle(Design.secondary)
+            .multilineTextAlignment(.center)
+    }
+}
 #endif

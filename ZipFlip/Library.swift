@@ -66,8 +66,13 @@ final class Library {
     // MARK: Spreadsheet
 
     /// A Zip Flip link was opened. Anything else is ignored.
-    func open(_ url: URL) {
-        guard let id = Links.spreadsheetID(fromZipFlipLink: url) else { return }
+    /// `route` says which entry point delivered it; only Debug builds show it.
+    func open(_ url: URL, via route: String = "") {
+        let id = Links.spreadsheetID(fromZipFlipLink: url)
+        #if DEBUG
+        DebugLinkLog.shared.record("\(route): \(url.absoluteString) \(id == nil ? "ignored" : "accepted")")
+        #endif
+        guard let id else { return }
         use(spreadsheetID: id)
     }
 

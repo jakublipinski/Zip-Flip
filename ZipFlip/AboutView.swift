@@ -26,6 +26,9 @@ struct AboutView: View {
                 Text(verbatim: version)
                     .font(.system(size: 11.5))
                     .foregroundStyle(Design.secondary)
+                #if DEBUG
+                DebugLinkLine()
+                #endif
 
                 para("Cards come from a Google Sheet shared by link, one tab per deck, column A front, column B back.")
                 para("Got it moves a card up the ladder: 1, 2, 4, 8, 16, 32, 64, 128 days. Again sends it back to the bottom.")

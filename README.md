@@ -54,6 +54,8 @@ Each entry records what was decided, why, and what follows from it. Dates are wh
 
 **Consequences.** The web domain is part of the product, not just a landing page. The same link opened on a phone or desktop must show a useful page, since people will tap it there too.
 
+**Verified (2026-11-18).** On an Apple Watch Series 12 with watchOS 27, a link tapped in Messages opens Zip Flip and adds the spreadsheet. One trap on the way: with only SwiftUI's `onOpenURL` listening, the tap opened the app but the link never arrived, and the app stayed on its first-run screen. Apple's watchOS example hands the link to the application delegate's `handle(_:)` as an `NSUserActivity` of type `NSUserActivityTypeBrowsingWeb` with the address in `webpageURL`. The app now listens there, on SwiftUI's `onContinueUserActivity(NSUserActivityTypeBrowsingWeb)` and on `onOpenURL`; on the test watch the link arrived through `onContinueUserActivity`. Messages on the watch shows the link as a card with the link page's title and the domain, not as a bare address. The watchOS simulator cannot test any of this: `simctl openurl` with an https address launches nothing.
+
 ### 4. The domain is zip-flip.app (2026-11-01)
 
 **Decision.** All links use `https://zip-flip.app/...`.
